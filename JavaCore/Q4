@@ -1,1 +1,28 @@
+public class Q4 {
+
+    static class singleton{
+        private static final singleton obj = new singleton();
+        //private constructor
+        private singleton(){
+    
+        }
+    
+        public static singleton getInstance(){
+            return obj;
+        }
+    }
+    
+    
+
+    public static void main(String[] args) {
+        singleton obj1 = singleton.getInstance(); //obj1 is the singleton instance
+        System.out.println(obj1);
+        
+    }
+    
+    
+}
+
+
+
 
