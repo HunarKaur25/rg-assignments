@@ -1,7 +1,6 @@
 import java.sql.*;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+
 public class Q7 {
     static class Employee {
         private int id;
