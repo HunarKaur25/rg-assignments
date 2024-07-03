@@ -1,1 +1,122 @@
+import java.sql.*;
+
+//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+public class Q7 {
+    static class Employee {
+        private int id;
+        private String name;
+        private String department;
+
+        //constructor
+        public Employee(int id, String name, String department) {
+            this.id = id;
+            this.name = name;
+            this.department = department;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getDepartment() {
+            return department;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setDepartment(String dept) {
+            this.department = dept;
+        }
+
+    }
+
+    public static class EmployeeJDBC {
+        static String url = "jdbc:postgresql://localhost:5432/Hunar";
+        static String username = "postgres";
+        static String password = "hunar";
+
+        //CREATE
+        public void createEmployee(Employee employee) {
+            String sql = "INSERT INTO \"Employee\" (id,name,department) VALUES (?, ?, ?)";
+            try (Connection con = DriverManager.getConnection(url, username, password);
+                 PreparedStatement ps = con.prepareStatement(sql)) {
+                ps.setInt(1, employee.getId());
+                ps.setString(2, employee.getName());
+                ps.setString(3, employee.getDepartment());
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        //READ
+        public static Employee readEmployee(int id) {
+            String sql = "SELECT * FROM \"Employee\" WHERE \"id\" = ?";
+            try (Connection con = DriverManager.getConnection(url, username, password);
+                 PreparedStatement ps = con.prepareStatement(sql)) {
+                ps.setInt(1, id);
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    return new Employee(rs.getInt("id"), rs.getString("name"), rs.getString("department"));
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        }
+
+        //Update
+        public void updateEmployee(Employee employee) {
+            String sql = "UPDATE \"Employee\" SET name = ?, department = ? WHERE \"id\" = ?";
+            try(Connection con = DriverManager.getConnection(url, username, password);
+                PreparedStatement ps = con.prepareStatement(sql)){
+                ps.setString(1, employee.getName());
+                ps.setString(2, employee.getDepartment());
+                ps.setInt(3, employee.getId());
+                ps.executeUpdate();
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        //Delete
+        public void deleteEmployee(int id) {
+            String sql = "DELETE FROM \"Employee\" WHERE \"id\" = ?";
+            try(Connection con = DriverManager.getConnection(url, username, password);
+                PreparedStatement ps = con.prepareStatement(sql)){
+                ps.setInt(1, id);
+                ps.executeUpdate();
+            }
+
+
+            catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+
+    }
+
+        public static void main(String[] args) throws Exception {
+
+            EmployeeJDBC employeeJDBC = new EmployeeJDBC();
+            employeeJDBC.createEmployee(new Employee(3, "Ritick", "HR"));
+            employeeJDBC.createEmployee(new Employee(4, "Dhruv", "IT"));
+            System.out.println(EmployeeJDBC.readEmployee(1));
+            employeeJDBC.updateEmployee(new Employee(1, "Diksha", "HRA"));
+            employeeJDBC.deleteEmployee(2);
+        }
+    }
 
